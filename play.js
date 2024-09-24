@@ -15,3 +15,12 @@ const student = {
 
 student.greet();
 console.log(student);
+
+//task3
+const fruits = ['apple', 'oranges' , ' ', 'mango', ' ' , 'lemon'];
+    
+const newFruits = fruits.map(item => item ===' ' ? 'empty string' : item);
+
+console.log(fruits);
+console.log(newFruits);
+

@@ -1,0 +1,46 @@
+body{
+    padding: 0;
+    margin: 0;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+main {
+    padding: 1 rem;
+}
+
+.main_header{
+    width: 100%;
+    height: 3.5rem;
+    background-color: darkslategrey;
+    padding: 0 1.5rem;
+}
+
+.main_nav {
+    height: 100%;
+    display: flex;
+    align-items: center;
+}
+
+.main_unorderedlist{
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+}
+
+.main_itemlist{
+    margin: 0 1rem;
+    padding: 0;
+
+}
+
+.main_itemlist a {
+    text-decoration: none;
+    color:black;
+}
+
+.main_itemlist a:hover,
+.main_itemlist a:active,
+.main_itemlist a.active {
+    color:white;
+}

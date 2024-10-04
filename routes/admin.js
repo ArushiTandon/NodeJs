@@ -20,7 +20,7 @@ router.get('/contact-us', (req, res, next) => {
 
 router.post('/success', (req, res, next) => {
     console.log(req.body);
-    res.redirect('/success');
+    res.redirect('/admin/success');
 });
 
 router.get('/success', (req, res, next) => {

@@ -28,6 +28,7 @@ main {
 .email_div {
     display: flex;
     flex-direction: column; 
+    padding: 10px;
 }
 
 label {

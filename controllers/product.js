@@ -1,3 +1,4 @@
+const Product = require('../models/product')
 const path = require('path');
 const rootDir = require('../misc/path');
 
@@ -6,8 +7,16 @@ exports.getAddProduct = (req, res, next) => {
 }
 
 exports.postAddProduct = (req, res, next) => {
-    console.log(req.body);
+    const product = new Product(req.body.title);
+    product.save();
     res.redirect('/');
+}
+
+exports.getProduct = (req, res, next) => {
+    const products = product.fetchAll((products) => {
+        fs.readfile
+     res.redirect('/');
+    });  
 }
 
 exports.getContact = (req, res, next) => {

@@ -8,6 +8,8 @@ router.get('/add-product', productController.getAddProduct);
 
 router.post('/add-product', productController.postAddProduct);
 
+router.get('/add-product', productController.getProduct);
+
 router.get('/contact-us', productController.getContact);
 
 router.post('/success', productController.postContact);

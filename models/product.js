@@ -1,5 +1,6 @@
 const fs = require('fs');
 const path = require('path');
+const Cart = require('./cart');
 
 const p = path.join(
   path.dirname(process.mainModule.filename),
@@ -18,7 +19,8 @@ const getProductsFromFile = cb => {
 };
 
 module.exports = class Product {
-  constructor(title, imageUrl, description, price) {
+  constructor(id, title, imageUrl, description, price) {
+    this.id = id;
     this.title = title;
     this.imageUrl = imageUrl;
     this.description = description;
@@ -26,12 +28,45 @@ module.exports = class Product {
   }
 
   save() {
-    this.id = Math.random().toString();
     getProductsFromFile(products => {
-      products.push(this);
-      fs.writeFile(p, JSON.stringify(products), err => {
-        console.log(err);
-      });
+      if (this.id) {
+        // Find the index of the existing product
+        const existingProductIndex = products.findIndex(prod => prod.id === this.id);
+        const updatedProducts = [...products];
+        updatedProducts[existingProductIndex] = this;
+        
+        // Write the updated products array to the file
+        fs.writeFile(p, JSON.stringify(updatedProducts), err => {
+          if (err) {
+            console.log(err);
+          }
+        });
+      } else {
+        // Assign a unique ID to the new product
+        this.id = Math.random().toString();
+        
+        // Push the new product into the products array
+        products.push(this);
+        
+        // Write the updated products array to the file
+        fs.writeFile(p, JSON.stringify(products), err => {
+          if (err) {
+            console.log(err);
+          }
+        });
+      }
+    });
+  }
+
+  static deleteById(id){
+    getProductsFromFile(products => {
+      const product = products.find(prod => prod.id === id)
+      const updatedProducts = products.filter(prod => prod.id !== id);
+      fs.writeFile(p, JSON.stringify(updatedProducts), err => {
+        if(!err){
+          Cart.deleteProduct(id, product.price)
+        }
+      })
     });
   }
 

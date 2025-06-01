@@ -1,27 +1,56 @@
-const Sequelize = require('sequelize');
+const mongodb = require('mongodb');
+const ObjectId = mongodb.ObjectId;
+const getDb = require('../misc/database').getDb;
 
-const sequelize = require('../misc/database');
-
-const Product = sequelize.define('product', {
-  id: {
-    type: Sequelize.INTEGER,
-    autoIncrement: true,
-    allowedNull: false,
-    primaryKey: true
-  },
-  title: Sequelize.STRING,
-  price: {
-    type: Sequelize.DOUBLE,
-    allowedNull: false
-  },
-  imageUrl: {
-    type: Sequelize.STRING,
-    allowedNull: false
-  },
-  description: {
-    type: Sequelize.STRING,
-    allowedNull: false
+class Product {
+  constructor(title, price, description, imageUrl){
+    this.title = title;
+    this.price = price;
+    this.description = description;
+    this.imageUrl = imageUrl;
   }
-});
+
+
+  save(){
+    const db = getDb();
+    return db.collection('products').insertOne(this)
+    .then(result => {
+      console.log('Product Created', result);
+    })
+    .catch(err => console.log(err));
+
+  }
+  static fetchAll() {
+    const db = getDb();
+    return db.collection('products')
+      .find()
+      .toArray()
+      .then(products => {
+        console.log(products);
+        return products;
+      })
+      .catch(err => console.log(err));
+  }
+
+  static findById(prodId){
+    const db = getDb();
+
+     if (!mongodb.ObjectId.isValid(prodId)) {
+    console.log('Invalid ObjectId:', prodId);
+    return Promise.reject(new Error('Invalid ObjectId'));
+  }
+
+    return db.collection('products')
+      .findOne({ _id: new mongodb.ObjectId(prodId) })
+      .then(product => {
+        console.log(product);
+        return product;
+      })
+      .catch(err => console.log(err));
+  }
+}
+
+
+
 
 module.exports = Product;

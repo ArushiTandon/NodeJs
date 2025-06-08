@@ -9,7 +9,7 @@ class Product {
     this.description = description;
     this.imageUrl = imageUrl;
     this._id = id ? new mongodb.ObjectId(id) : null;
-    this.userId = this.userId;
+    this.userId = new mongodb.ObjectId(userId); // Example userId, replace with actual userId
   }
 
 

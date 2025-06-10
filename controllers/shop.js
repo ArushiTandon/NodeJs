@@ -4,7 +4,7 @@ const mongodb = require('mongodb');
 
 
 exports.getProducts = (req, res, next) => {
-  Product.fetchAll()
+  Product.find()
   .then(products => {
     res.render('shop/product-list', {
       prods: products,
@@ -17,23 +17,6 @@ exports.getProducts = (req, res, next) => {
 
 exports.getProduct = (req, res, next) => {
   const prodId = req.params.productId;
-  // Product.findAll({where: {id: prodId}})
-  // .then(products => {
-  //   res.render('shop/product-detail', {
-  //     product: products[0],
-  //     pageTitle: products[0].title,
-  //     path: '/products'
-  //   });
-  // })
-
-  if (!mongodb.ObjectId.isValid(prodId)) {
-    // Handle invalid ObjectId gracefully
-    return res.status(404).render('404', {
-      pageTitle: 'Product Not Found',
-      path: '/products'
-    });
-  }
-
   Product.findById(prodId)
   .then(product => {
     res.render('shop/product-detail', {
@@ -47,7 +30,7 @@ exports.getProduct = (req, res, next) => {
 };
 
 exports.getIndex = (req, res, next) => {
-  Product.fetchAll()
+  Product.find() //what is cursor? why do we need it?
   .then(products => {
     res.render('shop/index', {
       prods: products,

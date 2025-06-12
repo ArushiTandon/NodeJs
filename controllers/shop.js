@@ -90,7 +90,7 @@ exports.postOrder = (req, res, next) => {
       const products = user.cart.items.map(i => {
         return {
           quantity: i.quantity,
-          product: { ...i.productId._doc }
+          product: { ...i.productId._doc } // _doc is used to get the actual document data from the mongoose document
         };
       });
 
@@ -105,6 +105,9 @@ exports.postOrder = (req, res, next) => {
       return order.save();
     })
     .then(result => {
+      return req.user.clearCart(); // clear the cart after order is placed
+    })
+    .then(() => {
       res.redirect('/orders');
     })
     .catch(err => console.log(err));

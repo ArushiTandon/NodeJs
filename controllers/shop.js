@@ -1,5 +1,5 @@
 const Product = require('../models/product');
-// const Cart = require('../models/cart');
+const Order = require('../models/order');
 const mongodb = require('mongodb');
 
 
@@ -84,12 +84,32 @@ exports.postCartDeleteProduct = (req, res, next) => {
 
 exports.postOrder = (req, res, next) => {
   req.user
-  .addOrder()
-  .then(result => {
-    res.redirect('/orders');
-  })
-  .catch(err => console.log(err));
+    .populate('cart.items.productId') // populate productId in cart with actual product data
+    .execPopulate()
+    .then(user => {
+      const products = user.cart.items.map(i => {
+        return {
+          quantity: i.quantity,
+          product: { ...i.productId._doc }
+        };
+      });
+
+      const order = new Order({
+        products: products,
+        user: {
+          email: req.user.email,
+          userId: new mongodb.ObjectId(req.user._id)
+        }
+      });
+
+      return order.save();
+    })
+    .then(result => {
+      res.redirect('/orders');
+    })
+    .catch(err => console.log(err));
 };
+
 
 
 exports.getOrders = (req, res, next) => {

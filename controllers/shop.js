@@ -45,9 +45,10 @@ exports.getIndex = (req, res, next) => {
 exports.getCart = (req, res, next) => {
   
   req.user
-  .getCart()
-
-    .then(products => {
+  .populate('cart.items.productId') //populate() is a mongoose method that replaces the specified path in the document with the documents from another collection
+  .execPopulate() //execPopulate() is used to execute the population of the document
+    .then(user => {
+      const products = user.cart.items; //user.cart.items is an array of objects, each object contains productId and quantity
       res.render('shop/cart', {
         path: '/cart',
         pageTitle: 'Your Cart',
@@ -56,26 +57,7 @@ exports.getCart = (req, res, next) => {
     })
     .catch(err => console.log(err));
   }
-  // Cart.getCart(cart => {
-  //   Product.findAll()
-  //   .then(products => {
-  //     const cartProducts = [];
-  //     for (product of products) {
-  //       const cartProductData = cart.products.find(
-  //         prod => prod.id === product.id
-  //       );
-  //       if (cartProductData) {
-  //         cartProducts.push({ productData: product, qty: cartProductData.qty });
-  //       }
-  //     }
-  //     res.render('shop/cart', {
-  //       path: '/cart',
-  //       pageTitle: 'Your Cart',
-  //       products: cartProducts
-  //     });
-  //   });
-  // });
-
+ 
 
 exports.postCart = (req, res, next) => {
   const prodId = req.body.productId;
